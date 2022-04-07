@@ -9,12 +9,17 @@ from finbert.finbert import predict
 from pytorch_pretrained_bert.modeling import BertForSequenceClassification
 import nltk
 import os
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
+
+model = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
 
 nltk.download('punkt')
 app = Flask(__name__)
 CORS(app)
 start = int(round(time.time()))
-model = BertForSequenceClassification.from_pretrained('/src/models/classifier_model/finbert-sentiment', num_labels=3, cache_dir=None)
+#model = BertForSequenceClassification.from_pretrained('./models/hugging_face', num_labels=3, cache_dir=None)
 
 @app.route("/",methods=['POST'])
 def score():

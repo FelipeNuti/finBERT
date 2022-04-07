@@ -580,6 +580,7 @@ class FinBert(object):
 
 def predict(text, model, write_to_csv=False, path=None, use_gpu=False, gpu_name='cuda:0', batch_size=5):
     """
+    Taken from finBERT repo
     Predict sentiments of sentences in a given text. The function first tokenizes sentences, make predictions and write
     results.
     Parameters
@@ -619,9 +620,11 @@ def predict(text, model, write_to_csv=False, path=None, use_gpu=False, gpu_name=
         with torch.no_grad():
             model     = model.to(device)
 
-            logits = model(all_input_ids, all_attention_mask, all_token_type_ids)[0]
+            logits = model(all_input_ids, all_attention_mask, all_token_type_ids).logits#[0]
+            print(logits)
             logging.info(logits)
             logits = softmax(np.array(logits.cpu()))
+            logging.info(logits)
             sentiment_score = pd.Series(logits[:, 0] - logits[:, 1])
             predictions = np.squeeze(np.argmax(logits, axis=1))
 
